@@ -3,7 +3,7 @@
 /** @var \Illuminate\Routing\Route $route */
 $route = Route::get(
     config('prometheus.metrics_route_path'),
-    \Superbalist\LaravelPrometheusExporter\MetricsController::class . '@getMetrics'
+    \Mcoirault\LaravelPrometheusExporter\MetricsController::class . '@getMetrics'
 );
 
 if ($name = config('prometheus.metrics_route_name')) {

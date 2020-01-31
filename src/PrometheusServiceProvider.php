@@ -1,6 +1,6 @@
 <?php
 
-namespace Superbalist\LaravelPrometheusExporter;
+namespace Mcoirault\LaravelPrometheusExporter;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
