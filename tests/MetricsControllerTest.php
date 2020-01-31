@@ -7,8 +7,8 @@ use Illuminate\Http\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Prometheus\RenderTextFormat;
-use Superbalist\LaravelPrometheusExporter\MetricsController;
-use Superbalist\LaravelPrometheusExporter\PrometheusExporter;
+use Mcoirault\LaravelPrometheusExporter\MetricsController;
+use Mcoirault\LaravelPrometheusExporter\PrometheusExporter;
 
 class MetricsControllerTest extends TestCase
 {
