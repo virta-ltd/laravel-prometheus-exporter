@@ -34,6 +34,7 @@
     },
     "laravel": {
       "providers": [
+        "Mcoirault\\LaravelPrometheusExporter\\MetricsEndpointServiceProvider",
         "Mcoirault\\LaravelPrometheusExporter\\PrometheusServiceProvider"
       ],
       "aliases": {
