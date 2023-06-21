@@ -19,7 +19,7 @@
   },
   "require-dev": {
     "ext-apcu": "*",
-    "phpunit/phpunit": "^9.0",
+    "phpunit/phpunit": "^10.2",
     "mockery/mockery": "^1.4"
   },
   "autoload": {
