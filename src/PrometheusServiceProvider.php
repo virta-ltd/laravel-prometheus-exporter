@@ -10,19 +10,14 @@ use Prometheus\Storage\Adapter;
 
 class PrometheusServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    protected $defer = true;
     /**
      * Perform post-registration booting of services.
      */
-    public function boot(PrometheusExporter $exporter)
+    public function boot(PrometheusExporter $exporter): void
     {
         $this->publishes([
             __DIR__ . '/../config/prometheus.php' => config_path('prometheus.php'),
         ]);
-
-        if (config('prometheus.metrics_route_enabled')) {
-            $this->loadRoutesFrom(__DIR__ . '/routes.php');
-        }
 
         foreach (config('prometheus.collectors') as $class) {
             $collector = $this->app->make($class);
@@ -33,7 +28,7 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
     /**
      * Register bindings in the container.
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/prometheus.php', 'prometheus');
 
@@ -49,7 +44,8 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
         });
 
         $this->app->bind(Adapter::class, function ($app) {
-            $factory = $app['prometheus.storage_adapter_factory']; /** @var StorageAdapterFactory $factory */
+            $factory = $app['prometheus.storage_adapter_factory'];
+            /** @var StorageAdapterFactory $factory */
             $driver = config('prometheus.storage_adapter');
             $configs = config('prometheus.storage_adapters');
             $config = Arr::get($configs, $driver, []);
@@ -63,7 +59,7 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
      *
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             Adapter::class,
