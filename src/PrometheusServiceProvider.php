@@ -2,17 +2,19 @@
 
 namespace Mcoirault\LaravelPrometheusExporter;
 
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Prometheus\CollectorRegistry;
 use Prometheus\Storage\Adapter;
 
-class PrometheusServiceProvider extends ServiceProvider
+class PrometheusServiceProvider extends ServiceProvider implements DeferrableProvider
 {
+    protected $defer = true;
     /**
      * Perform post-registration booting of services.
      */
-    public function boot()
+    public function boot(PrometheusExporter $exporter)
     {
         $this->publishes([
             __DIR__ . '/../config/prometheus.php' => config_path('prometheus.php'),
@@ -22,7 +24,6 @@ class PrometheusServiceProvider extends ServiceProvider
             $this->loadRoutesFrom(__DIR__ . '/routes.php');
         }
 
-        $exporter = $this->app->make(PrometheusExporter::class); /* @var PrometheusExporter $exporter */
         foreach (config('prometheus.collectors') as $class) {
             $collector = $this->app->make($class);
             $exporter->registerCollector($collector);
@@ -65,6 +66,9 @@ class PrometheusServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
+            Adapter::class,
+            PrometheusExporter::class,
+            StorageAdapterFactory::class,
             'prometheus',
             'prometheus.storage_adapter_factory',
             'prometheus.storage_adapter',
