@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use Override;
 use Prometheus\CollectorRegistry;
 use Prometheus\Storage\Adapter;
 
@@ -34,7 +35,7 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
     /**
      * Register bindings in the container.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/prometheus.php', 'prometheus');
@@ -68,9 +69,9 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
     /**
      * Get the services provided by the provider.
      *
-     * @return array
+     * @return array{class-string, class-string, class-string, string, string, string}
      */
-    #[\Override]
+    #[Override]
     public function provides(): array
     {
         return [

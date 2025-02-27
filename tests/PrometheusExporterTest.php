@@ -6,6 +6,8 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
+use Prometheus\Exception\MetricNotFoundException;
+use Prometheus\Exception\MetricsRegistrationException;
 use Prometheus\Gauge;
 use Prometheus\Histogram;
 use Mcoirault\LaravelPrometheusExporter\CollectorInterface;
@@ -16,7 +18,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $registry = $this->createMock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -27,7 +29,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testConstructWithCollectors()
+    public function testConstructWithCollectors(): void
     {
         $collector1 = $this->createMock(CollectorInterface::class);
         $collector1->expects($this->once())->method('getName')
@@ -54,7 +56,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testRegisterCollector()
+    public function testRegisterCollector(): void
     {
         $registry = $this->createMock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -78,7 +80,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testRegisterCollectorWhenCollectorIsAlreadyRegistered()
+    public function testRegisterCollectorWhenCollectorIsAlreadyRegistered(): void
     {
         $registry = $this->createMock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -109,7 +111,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testGetCollector()
+    public function testGetCollector(): void
     {
         $registry = $this->createMock(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
@@ -131,7 +133,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testGetCollectorWhenCollectorIsNotRegistered()
+    public function testGetCollectorWhenCollectorIsNotRegistered(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The collector "test" is not registered.');
@@ -144,8 +146,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricsRegistrationException
      */
-    public function testRegisterCounter()
+    public function testRegisterCounter(): void
     {
         $counter = $this->createMock(Counter::class);
 
@@ -171,8 +174,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricNotFoundException
      */
-    public function testGetCounter()
+    public function testGetCounter(): void
     {
         $counter = $this->createMock(Counter::class);
 
@@ -192,8 +196,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricsRegistrationException
      */
-    public function testGetOrRegisterCounter()
+    public function testGetOrRegisterCounter(): void
     {
         $counter = $this->createMock(Counter::class);
 
@@ -219,8 +224,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricsRegistrationException
      */
-    public function testRegisterGauge()
+    public function testRegisterGauge(): void
     {
         $gauge = $this->createMock(Gauge::class);
 
@@ -246,8 +252,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricNotFoundException
      */
-    public function testGetGauge()
+    public function testGetGauge(): void
     {
         $gauge = $this->createMock(Gauge::class);
 
@@ -267,8 +274,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricsRegistrationException
      */
-    public function testGetOrRegisterGauge()
+    public function testGetOrRegisterGauge(): void
     {
         $gauge = $this->createMock(Gauge::class);
 
@@ -294,8 +302,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricsRegistrationException
      */
-    public function testRegisterHistogram()
+    public function testRegisterHistogram(): void
     {
         $histogram = $this->createMock(Histogram::class);
 
@@ -323,8 +332,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricNotFoundException
      */
-    public function testGetHistogram()
+    public function testGetHistogram(): void
     {
         $histogram = $this->createMock(Histogram::class);
 
@@ -344,8 +354,9 @@ class PrometheusExporterTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws MetricsRegistrationException
      */
-    public function testGetOrRegisterHistogram()
+    public function testGetOrRegisterHistogram(): void
     {
         $histogram = $this->createMock(Histogram::class);
 
@@ -374,7 +385,7 @@ class PrometheusExporterTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testExport()
+    public function testExport(): void
     {
         $samples = ['meh'];
 

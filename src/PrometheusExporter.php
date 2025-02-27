@@ -4,30 +4,35 @@ namespace Mcoirault\LaravelPrometheusExporter;
 
 use InvalidArgumentException;
 use Prometheus\CollectorRegistry;
+use Prometheus\Counter;
+use Prometheus\Exception\MetricNotFoundException;
+use Prometheus\Exception\MetricsRegistrationException;
+use Prometheus\Gauge;
+use Prometheus\Histogram;
+use Prometheus\MetricFamilySamples;
 
 class PrometheusExporter
 {
     /**
      * @var CollectorRegistry
      */
-    protected $prometheus;
+    protected CollectorRegistry $prometheus;
 
     /**
      * @var array<string, CollectorInterface>
      */
-    protected $collectors = [];
+    protected array $collectors = [];
 
     /**
      * @param string $namespace
      * @param CollectorRegistry $prometheus
-     * @param array $collectors
+     * @param array<CollectorInterface> $collectors
      */
-    public function __construct(protected $namespace, CollectorRegistry $prometheus, array $collectors = [])
+    public function __construct(protected string $namespace, CollectorRegistry $prometheus, array $collectors = [])
     {
         $this->prometheus = $prometheus;
 
         foreach ($collectors as $collector) {
-            /* @var CollectorInterface $collector */
             $this->registerCollector($collector);
         }
     }
@@ -99,13 +104,14 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param string[] $labels
      *
-     * @return \Prometheus\Counter
+     * @return Counter
      *
+     * @throws MetricsRegistrationException
      * @see https://prometheus.io/docs/concepts/metric_types/#counter
      */
-    public function registerCounter($name, $help, $labels = []): \Prometheus\Counter
+    public function registerCounter(string $name, string $help, array $labels = []): Counter
     {
         return $this->prometheus->registerCounter($this->namespace, $name, $help, $labels);
     }
@@ -115,9 +121,10 @@ class PrometheusExporter
      *
      * @param string $name
      *
-     * @return \Prometheus\Counter
+     * @return Counter
+     * @throws MetricNotFoundException
      */
-    public function getCounter($name): \Prometheus\Counter
+    public function getCounter(string $name): Counter
     {
         return $this->prometheus->getCounter($this->namespace, $name);
     }
@@ -127,13 +134,14 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param string[] $labels
      *
-     * @return \Prometheus\Counter
+     * @return Counter
      *
+     * @throws MetricsRegistrationException
      * @see https://prometheus.io/docs/concepts/metric_types/#counter
      */
-    public function getOrRegisterCounter($name, $help, $labels = []): \Prometheus\Counter
+    public function getOrRegisterCounter(string $name, string $help, array $labels = []): Counter
     {
         return $this->prometheus->getOrRegisterCounter($this->namespace, $name, $help, $labels);
     }
@@ -143,13 +151,14 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param string[] $labels
      *
-     * @return \Prometheus\Gauge
+     * @return Gauge
      *
+     * @throws MetricsRegistrationException
      * @see https://prometheus.io/docs/concepts/metric_types/#gauge
      */
-    public function registerGauge($name, $help, $labels = []): \Prometheus\Gauge
+    public function registerGauge(string $name, string $help, array $labels = []): Gauge
     {
         return $this->prometheus->registerGauge($this->namespace, $name, $help, $labels);
     }
@@ -159,9 +168,10 @@ class PrometheusExporter
      *
      * @param string $name
      *
-     * @return \Prometheus\Gauge
+     * @return Gauge
+     * @throws MetricNotFoundException
      */
-    public function getGauge($name): \Prometheus\Gauge
+    public function getGauge(string $name): Gauge
     {
         return $this->prometheus->getGauge($this->namespace, $name);
     }
@@ -171,13 +181,14 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
+     * @param string[] $labels
      *
-     * @return \Prometheus\Gauge
+     * @return Gauge
      *
+     * @throws MetricsRegistrationException
      * @see https://prometheus.io/docs/concepts/metric_types/#gauge
      */
-    public function getOrRegisterGauge($name, $help, $labels = []): \Prometheus\Gauge
+    public function getOrRegisterGauge(string $name, string $help, array $labels = []): Gauge
     {
         return $this->prometheus->getOrRegisterGauge($this->namespace, $name, $help, $labels);
     }
@@ -187,14 +198,15 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
-     * @param array $buckets
+     * @param string[] $labels
+     * @param float[]|null $buckets
      *
-     * @return \Prometheus\Histogram
+     * @return Histogram
      *
+     * @throws MetricsRegistrationException
      * @see https://prometheus.io/docs/concepts/metric_types/#histogram
      */
-    public function registerHistogram($name, $help, $labels = [], $buckets = null): \Prometheus\Histogram
+    public function registerHistogram(string $name, string $help, array $labels = [], ?array $buckets = null): Histogram
     {
         return $this->prometheus->registerHistogram($this->namespace, $name, $help, $labels, $buckets);
     }
@@ -204,9 +216,10 @@ class PrometheusExporter
      *
      * @param string $name
      *
-     * @return \Prometheus\Histogram
+     * @return Histogram
+     * @throws MetricNotFoundException
      */
-    public function getHistogram($name): \Prometheus\Histogram
+    public function getHistogram(string $name): Histogram
     {
         return $this->prometheus->getHistogram($this->namespace, $name);
     }
@@ -216,14 +229,15 @@ class PrometheusExporter
      *
      * @param string $name
      * @param string $help
-     * @param array $labels
-     * @param array $buckets
+     * @param string[] $labels
+     * @param float[]|null $buckets
      *
-     * @return \Prometheus\Histogram
+     * @return Histogram
      *
+     * @throws MetricsRegistrationException
      * @see https://prometheus.io/docs/concepts/metric_types/#histogram
      */
-    public function getOrRegisterHistogram($name, $help, $labels = [], $buckets = null): \Prometheus\Histogram
+    public function getOrRegisterHistogram(string $name, string $help, array $labels = [], ?array $buckets = null): Histogram
     {
         return $this->prometheus->getOrRegisterHistogram($this->namespace, $name, $help, $labels, $buckets);
     }
@@ -231,12 +245,11 @@ class PrometheusExporter
     /**
      * Export the metrics from all collectors.
      *
-     * @return \Prometheus\MetricFamilySamples[]
+     * @return MetricFamilySamples[]
      */
     public function export(): array
     {
         foreach ($this->collectors as $collector) {
-            /* @var CollectorInterface $collector */
             $collector->collect();
         }
 

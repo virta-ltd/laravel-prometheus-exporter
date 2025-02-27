@@ -9,14 +9,14 @@ class ExampleCollector implements CollectorInterface
     /**
      * @var Gauge
      */
-    protected $usersRegisteredGauge;
+    protected Gauge $usersRegisteredGauge;
 
     /**
      * Return the name of the collector.
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'users';
     }
@@ -32,7 +32,7 @@ class ExampleCollector implements CollectorInterface
      *
      * @param PrometheusExporter $exporter
      */
-    public function registerMetrics(PrometheusExporter $exporter)
+    public function registerMetrics(PrometheusExporter $exporter): void
     {
         $this->usersRegisteredGauge = $exporter->registerGauge(
             'users_registered_total',
@@ -47,7 +47,7 @@ class ExampleCollector implements CollectorInterface
      * As an example, this may be used to perform time consuming database queries and set the value of a counter
      * or gauge.
      */
-    public function collect()
+    public function collect(): void
     {
         // retrieve the total number of staff users registered
         // eg: $totalUsers = Users::where('group', 'staff')->count();
