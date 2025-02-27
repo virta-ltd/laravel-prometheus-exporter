@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.2 - 2025-02-27
+
+* Replace deprecated rector/rector-laravel with driftingly/rector-laravel
+
 ## 2.3.1 - 2025-02-27
 
 * Refactor code to be PHPStan level 10 compliant
