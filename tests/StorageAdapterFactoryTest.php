@@ -11,6 +11,9 @@ use Mcoirault\LaravelPrometheusExporter\StorageAdapterFactory;
 
 class StorageAdapterFactoryTest extends TestCase
 {
+    /**
+     * @throws StorageException
+     */
     public function testMakeMemoryAdapter()
     {
         $factory = new StorageAdapterFactory();
@@ -25,11 +28,13 @@ class StorageAdapterFactoryTest extends TestCase
             $adapter = $factory->make('apc');
         } catch (StorageException) {
             $this->markTestSkipped("APCu not enabled? Skipping test");
-            return;
         }
         $this->assertInstanceOf(APC::class, $adapter);
     }
 
+    /**
+     * @throws StorageException
+     */
     public function testMakeRedisAdapter()
     {
         $factory = new StorageAdapterFactory();
@@ -37,6 +42,9 @@ class StorageAdapterFactoryTest extends TestCase
         $this->assertInstanceOf(Redis::class, $adapter);
     }
 
+    /**
+     * @throws StorageException
+     */
     public function testMakeInvalidAdapter()
     {
         $this->expectException(\InvalidArgumentException::class);
