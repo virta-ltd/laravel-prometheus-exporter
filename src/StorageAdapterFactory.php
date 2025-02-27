@@ -22,16 +22,12 @@ class StorageAdapterFactory
      */
     public function make($driver, array $config = [])
     {
-        switch ($driver) {
-            case 'memory':
-                return new InMemory();
-            case 'redis':
-                return $this->makeRedisAdapter($config);
-            case 'apc':
-                return new APC();
-        }
-
-        throw new InvalidArgumentException(sprintf('The driver [%s] is not supported.', $driver));
+        return match ($driver) {
+            'memory' => new InMemory(),
+            'redis' => $this->makeRedisAdapter($config),
+            'apc' => new APC(),
+            default => throw new InvalidArgumentException(sprintf('The driver [%s] is not supported.', $driver)),
+        };
     }
 
     /**

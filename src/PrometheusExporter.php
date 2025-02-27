@@ -8,11 +8,6 @@ use Prometheus\CollectorRegistry;
 class PrometheusExporter
 {
     /**
-     * @var string
-     */
-    protected $namespace;
-
-    /**
      * @var CollectorRegistry
      */
     protected $prometheus;
@@ -27,9 +22,8 @@ class PrometheusExporter
      * @param CollectorRegistry $prometheus
      * @param array $collectors
      */
-    public function __construct($namespace, CollectorRegistry $prometheus, array $collectors = [])
+    public function __construct(protected $namespace, CollectorRegistry $prometheus, array $collectors = [])
     {
-        $this->namespace = $namespace;
         $this->prometheus = $prometheus;
 
         foreach ($collectors as $collector) {

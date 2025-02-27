@@ -24,7 +24,7 @@ class MetricsController extends Controller
      */
     public function __construct(ResponseFactory $responseFactory, PrometheusExporter $prometheusExporter)
     {
-        $this->responseFactory = $responseFactory;
+        $this->responseFactory    = $responseFactory;
         $this->prometheusExporter = $prometheusExporter;
     }
 
@@ -57,7 +57,7 @@ class MetricsController extends Controller
         $metrics = $this->prometheusExporter->export();
 
         $renderer = new RenderTextFormat();
-        $result = $renderer->render($metrics);
+        $result   = $renderer->render($metrics);
 
         return $this->responseFactory->make($result, 200, ['Content-Type' => RenderTextFormat::MIME_TYPE]);
     }
