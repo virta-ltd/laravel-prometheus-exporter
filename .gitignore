@@ -6,3 +6,4 @@ coverage
 coverage.xml
 /.phpunit.result.cache
 .phpunit.cache
+/junit.xml
