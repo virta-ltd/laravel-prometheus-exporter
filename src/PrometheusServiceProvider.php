@@ -11,6 +11,7 @@ use Illuminate\Support\ServiceProvider;
 use Override;
 use Prometheus\CollectorRegistry;
 use Prometheus\Storage\Adapter;
+use Webmozart\Assert\Assert;
 
 class PrometheusServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -26,7 +27,14 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
             ]
         );
 
-        foreach (Config::get('prometheus.collectors') as $class) {
+        $collectorClasses = Config::get('prometheus.collectors');
+
+        if (!is_array($collectorClasses)) {
+            throw new BindingResolutionException('PrometheusCollectors must be an array.');
+        }
+
+        foreach ($collectorClasses as $class) {
+            Assert::classExists($class, "Invalid PrometheusCollector specified.");
             $collector = $this->app->make($class);
             $exporter->registerCollector($collector);
         }
@@ -45,7 +53,9 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
             function ($app) {
                 $adapter    = $app['prometheus.storage_adapter'];
                 $prometheus = new CollectorRegistry($adapter);
-                return new PrometheusExporter(Config::get('prometheus.namespace'), $prometheus);
+                $namespace = Config::get('prometheus.namespace');
+                Assert::stringNotEmpty($namespace, 'Prometheus namespace cannot be empty.');
+                return new PrometheusExporter($namespace, $prometheus);
             }
         );
         $this->app->alias(PrometheusExporter::class, 'prometheus');
@@ -58,8 +68,11 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
             /** @var StorageAdapterFactory $factory */
                 $factory = $app['prometheus.storage_adapter_factory'];
                 $driver  = Config::get('prometheus.storage_adapter');
+                Assert::stringNotEmpty($driver, 'Prometheus storage adapter driver cannot be empty.');
                 $configs = Config::get('prometheus.storage_adapters');
+                Assert::isArray($configs, 'Prometheus storage adapter config must be an array.');
                 $config  = Arr::get($configs, $driver, []);
+                Assert::isArray($config, 'Prometheus storage_adapters must be an array.');
                 return $factory->make($driver, $config);
             }
         );
