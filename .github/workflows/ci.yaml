@@ -3,31 +3,72 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   validate-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.3"
+          - "8.4"
+          - "8.5"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-
-      - name: Install dependencies
-        uses: php-actions/composer@v6
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
         with:
-          php_extensions: xdebug apcu redis
+          php-version: "${{ matrix.php-version }}"
+          extensions: apcu, redis, xdebug
+          coverage: "xdebug"
 
-      - name: Pre-commit checks
-        uses: pre-commit/action@v3.0.1
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: PHPUnit tests
-        uses: php-actions/phpunit@v4
+      - uses: actions/cache@v4
+        id: actions-cache
         with:
-          php_extensions: xdebug apcu redis
-          args: --coverage-text
-        env:
-          XDEBUG_MODE: coverage
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ matrix.php-version }}-
+
+      - name: Cache PHP dependencies
+        uses: actions/cache@v4
+        id: vendor-cache
+        with:
+          path: vendor
+          key: ${{ runner.os }}-build-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Update Dependencies with latest stable
+        run: composer update --no-progress
+
+      - name: Code style test
+        run: ./vendor/bin/phpcs
+
+      - name: PHPStan code analysis
+        run: php vendor/bin/phpstan analyze
+
+      - name: Execute Rector
+        run: vendor/bin/rector --dry-run
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit --coverage-cobertura=coverage.xml --log-junit=junit.xml
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: cobertura.xml
+          fail_below_min: 'false'
+          badge: 'true'
+
+      - name: 🚀 Run yamllint
+        uses: frenck/action-yamllint@v1
+        with:
+          strict: 'true'
