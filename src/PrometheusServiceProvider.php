@@ -2,7 +2,9 @@
 
 namespace Mcoirault\LaravelPrometheusExporter;
 
+use ArrayAccess;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
@@ -11,6 +13,7 @@ use Illuminate\Support\ServiceProvider;
 use Override;
 use Prometheus\CollectorRegistry;
 use Prometheus\Storage\Adapter;
+use Webmozart\Assert\Assert;
 
 class PrometheusServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -26,8 +29,18 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
             ]
         );
 
-        foreach (Config::get('prometheus.collectors') as $class) {
+        $collectorClasses = Config::get('prometheus.collectors');
+
+        if (!is_array($collectorClasses)) {
+            throw new BindingResolutionException('PrometheusCollectors must be an array.');
+        }
+
+        foreach ($collectorClasses as $class) {
+            Assert::classExists($class, "Invalid PrometheusCollector specified.");
+            Assert::implementsInterface($class, CollectorRegistry::class);
             $collector = $this->app->make($class);
+            Assert::implementsInterface($collector, CollectorInterface::class);
+            Assert::isInstanceOf($collector, CollectorRegistry::class);
             $exporter->registerCollector($collector);
         }
     }
@@ -42,10 +55,13 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
 
         $this->app->singleton(
             PrometheusExporter::class,
-            function ($app) {
-                $adapter    = $app['prometheus.storage_adapter'];
+            function (ArrayAccess $app) {
+                $adapter = $app['prometheus.storage_adapter'];
+                Assert::isInstanceOf($adapter, Adapter::class);
                 $prometheus = new CollectorRegistry($adapter);
-                return new PrometheusExporter(Config::get('prometheus.namespace'), $prometheus);
+                $namespace  = Config::get('prometheus.namespace');
+                Assert::stringNotEmpty($namespace, 'Prometheus namespace cannot be empty.');
+                return new PrometheusExporter($namespace, $prometheus);
             }
         );
         $this->app->alias(PrometheusExporter::class, 'prometheus');
@@ -54,12 +70,15 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
 
         $this->app->bind(
             Adapter::class,
-            function ($app) {
+            function (ArrayAccess $app) {
             /** @var StorageAdapterFactory $factory */
                 $factory = $app['prometheus.storage_adapter_factory'];
                 $driver  = Config::get('prometheus.storage_adapter');
+                Assert::stringNotEmpty($driver, 'Prometheus storage adapter driver cannot be empty.');
                 $configs = Config::get('prometheus.storage_adapters');
-                $config  = Arr::get($configs, $driver, []);
+                Assert::isArray($configs, 'Prometheus storage adapter config must be an array.');
+                $config = Arr::get($configs, $driver, []);
+                Assert::isArray($config, 'Prometheus storage_adapters must be an array.');
                 return $factory->make($driver, $config);
             }
         );

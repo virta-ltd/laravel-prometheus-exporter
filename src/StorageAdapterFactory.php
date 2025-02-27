@@ -8,6 +8,7 @@ use Prometheus\Storage\Adapter;
 use Prometheus\Storage\APC;
 use Prometheus\Storage\InMemory;
 use Prometheus\Storage\Redis;
+use Webmozart\Assert\Assert;
 
 class StorageAdapterFactory
 {
@@ -41,6 +42,7 @@ class StorageAdapterFactory
     protected function makeRedisAdapter(array $config): Redis
     {
         if (isset($config['prefix'])) {
+            Assert::string($config['prefix']);
             Redis::setPrefix($config['prefix']);
         }
         return new Redis($config);
