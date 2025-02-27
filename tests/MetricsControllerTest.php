@@ -4,7 +4,7 @@ namespace Tests;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
-use Mockery;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Prometheus\RenderTextFormat;
 use Mcoirault\LaravelPrometheusExporter\MetricsController;
@@ -12,35 +12,38 @@ use Mcoirault\LaravelPrometheusExporter\PrometheusExporter;
 
 class MetricsControllerTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
     public function testConstruct()
     {
-        $responseFactory = Mockery::mock(ResponseFactory::class);
-        $exporter        = Mockery::mock(PrometheusExporter::class);
+        $responseFactory = $this->createMock(ResponseFactory::class);
+        $exporter        = $this->createMock(PrometheusExporter::class);
         $controller      = new MetricsController($responseFactory, $exporter);
         $this->assertSame($responseFactory, $controller->getResponseFactory());
         $this->assertSame($exporter, $controller->getPrometheusExporter());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testGetMetrics()
     {
-        $response = Mockery::mock(Response::class);
+        $response = $this->createMock(Response::class);
 
-        $responseFactory = Mockery::mock(ResponseFactory::class);
-        $responseFactory->shouldReceive('make')
-            ->once()
-            ->withArgs(
-                [
+        $responseFactory = $this->createMock(ResponseFactory::class);
+        $responseFactory->expects($this->once())
+            ->method('make')
+            ->with(
                 "\n",
                 200,
                 ['Content-Type' => RenderTextFormat::MIME_TYPE],
-                ]
             )
-            ->andReturn($response);
+            ->willReturn($response);
 
-        $exporter = Mockery::mock(PrometheusExporter::class);
-        $exporter->shouldReceive('export')
-            ->once()
-            ->andReturn([]);
+        $exporter = $this->createMock(PrometheusExporter::class);
+        $exporter->expects($this->once())->method('export')
+            ->willReturn([]);
 
         $controller = new MetricsController($responseFactory, $exporter);
 

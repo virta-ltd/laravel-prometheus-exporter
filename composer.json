@@ -23,7 +23,6 @@
     "ext-apcu": "*",
     "ext-redis": "*",
     "phpunit/phpunit": "^12",
-    "mockery/mockery": "^1.6.12",
     "squizlabs/php_codesniffer": "^3.11",
     "larastan/larastan": "^3.1",
     "rector/rector": "^2.0"
