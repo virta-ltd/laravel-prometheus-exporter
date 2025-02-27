@@ -72,7 +72,7 @@ class PrometheusExporterTest extends TestCase
         $collectors = $exporter->getCollectors();
         $this->assertCount(1, $collectors);
         $this->assertArrayHasKey('users', $collectors);
-        $this->assertSame($collector, $collectors['users']);
+        $this->assertSame($collector, $collectors['users'] ?? null);
     }
 
     /**
@@ -96,14 +96,14 @@ class PrometheusExporterTest extends TestCase
         $collectors = $exporter->getCollectors();
         $this->assertCount(1, $collectors);
         $this->assertArrayHasKey('users', $collectors);
-        $this->assertSame($collector, $collectors['users']);
+        $this->assertSame($collector, $collectors['users'] ?? null);
 
         $exporter->registerCollector($collector);
 
         $collectors = $exporter->getCollectors();
         $this->assertCount(1, $collectors);
         $this->assertArrayHasKey('users', $collectors);
-        $this->assertSame($collector, $collectors['users']);
+        $this->assertSame($collector, $collectors['users'] ?? null);
     }
 
     /**
