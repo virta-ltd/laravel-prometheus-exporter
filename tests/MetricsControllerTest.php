@@ -15,7 +15,7 @@ class MetricsControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $responseFactory = $this->createMock(ResponseFactory::class);
         $exporter        = $this->createMock(PrometheusExporter::class);
@@ -27,7 +27,7 @@ class MetricsControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testGetMetrics()
+    public function testGetMetrics(): void
     {
         $response = $this->createMock(Response::class);
 

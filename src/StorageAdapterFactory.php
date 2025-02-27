@@ -3,6 +3,7 @@
 namespace Mcoirault\LaravelPrometheusExporter;
 
 use InvalidArgumentException;
+use Prometheus\Exception\StorageException;
 use Prometheus\Storage\Adapter;
 use Prometheus\Storage\APC;
 use Prometheus\Storage\InMemory;
@@ -14,13 +15,13 @@ class StorageAdapterFactory
      * Factory a storage adapter.
      *
      * @param string $driver
-     * @param array $config
+     * @param mixed[] $config
      *
      * @return Adapter
      *
-     * @throws \Prometheus\Exception\StorageException
+     * @throws StorageException
      */
-    public function make($driver, array $config = [])
+    public function make(string $driver, array $config = []): Redis|InMemory|APC|Adapter
     {
         return match ($driver) {
             'memory' => new InMemory(),
@@ -33,11 +34,11 @@ class StorageAdapterFactory
     /**
      * Factory a redis storage adapter.
      *
-     * @param array $config
+     * @param mixed[] $config
      *
      * @return Redis
      */
-    protected function makeRedisAdapter(array $config)
+    protected function makeRedisAdapter(array $config): Redis
     {
         if (isset($config['prefix'])) {
             Redis::setPrefix($config['prefix']);

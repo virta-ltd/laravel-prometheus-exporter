@@ -14,14 +14,14 @@ class StorageAdapterFactoryTest extends TestCase
     /**
      * @throws StorageException
      */
-    public function testMakeMemoryAdapter()
+    public function testMakeMemoryAdapter(): void
     {
         $factory = new StorageAdapterFactory();
         $adapter = $factory->make('memory');
         $this->assertInstanceOf(InMemory::class, $adapter);
     }
 
-    public function testMakeApcAdapter()
+    public function testMakeApcAdapter(): void
     {
         $factory = new StorageAdapterFactory();
         try {
@@ -35,7 +35,7 @@ class StorageAdapterFactoryTest extends TestCase
     /**
      * @throws StorageException
      */
-    public function testMakeRedisAdapter()
+    public function testMakeRedisAdapter(): void
     {
         $factory = new StorageAdapterFactory();
         $adapter = $factory->make('redis');
@@ -45,7 +45,7 @@ class StorageAdapterFactoryTest extends TestCase
     /**
      * @throws StorageException
      */
-    public function testMakeInvalidAdapter()
+    public function testMakeInvalidAdapter(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The driver [moo] is not supported.');
