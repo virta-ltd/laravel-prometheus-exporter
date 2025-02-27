@@ -141,12 +141,14 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('registerCounter')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'search_requests_total',
                 'The total number of search requests.',
                 ['request_type'],
-            ])
+                ]
+            )
             ->andReturn($counter);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -166,10 +168,12 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('getCounter')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'search_requests_total',
-            ])
+                ]
+            )
             ->andReturn($counter);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -185,12 +189,14 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('getOrRegisterCounter')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'search_requests_total',
                 'The total number of search requests.',
                 ['request_type'],
-            ])
+                ]
+            )
             ->andReturn($counter);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -210,12 +216,14 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('registerGauge')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'users_online_total',
                 'The total number of users online.',
                 ['group'],
-            ])
+                ]
+            )
             ->andReturn($gauge);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -235,10 +243,12 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('getGauge')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'users_online_total',
-            ])
+                ]
+            )
             ->andReturn($gauge);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -254,12 +264,14 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('getOrRegisterGauge')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'users_online_total',
                 'The total number of users online.',
                 ['group'],
-            ])
+                ]
+            )
             ->andReturn($gauge);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -279,13 +291,15 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('registerHistogram')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'response_time_seconds',
                 'The response time of a request.',
                 ['request_type'],
                 [0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0],
-            ])
+                ]
+            )
             ->andReturn($histogram);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -306,10 +320,12 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('getHistogram')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'response_time_seconds',
-            ])
+                ]
+            )
             ->andReturn($histogram);
 
         $exporter = new PrometheusExporter('app', $registry);
@@ -325,13 +341,15 @@ class PrometheusExporterTest extends TestCase
         $registry = Mockery::mock(CollectorRegistry::class);
         $registry->shouldReceive('getOrRegisterHistogram')
             ->once()
-            ->withArgs([
+            ->withArgs(
+                [
                 'app',
                 'response_time_seconds',
                 'The response time of a request.',
                 ['request_type'],
                 [0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0],
-            ])
+                ]
+            )
             ->andReturn($histogram);
 
         $exporter = new PrometheusExporter('app', $registry);

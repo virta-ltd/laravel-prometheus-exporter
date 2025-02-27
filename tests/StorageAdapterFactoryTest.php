@@ -23,7 +23,7 @@ class StorageAdapterFactoryTest extends TestCase
         $factory = new StorageAdapterFactory();
         try {
             $adapter = $factory->make('apc');
-        } catch (StorageException $exception) {
+        } catch (StorageException) {
             $this->markTestSkipped("APCu not enabled? Skipping test");
             return;
         }

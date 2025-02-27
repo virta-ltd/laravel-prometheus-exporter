@@ -19,9 +19,11 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
      */
     public function boot(PrometheusExporter $exporter): void
     {
-        $this->publishes([
+        $this->publishes(
+            [
             __DIR__ . '/../config/prometheus.php' => App::configPath('prometheus.php'),
-        ]);
+            ]
+        );
 
         foreach (Config::get('prometheus.collectors') as $class) {
             $collector = $this->app->make($class);
@@ -32,29 +34,34 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
     /**
      * Register bindings in the container.
      */
+    #[\Override]
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/prometheus.php', 'prometheus');
 
-        $this->app->singleton(PrometheusExporter::class, function ($app) {
-            $adapter = $app['prometheus.storage_adapter'];
-            $prometheus = new CollectorRegistry($adapter);
-            return new PrometheusExporter(Config::get('prometheus.namespace'), $prometheus);
-        });
+        $this->app->singleton(
+            PrometheusExporter::class,
+            function ($app) {
+                $adapter    = $app['prometheus.storage_adapter'];
+                $prometheus = new CollectorRegistry($adapter);
+                return new PrometheusExporter(Config::get('prometheus.namespace'), $prometheus);
+            }
+        );
         $this->app->alias(PrometheusExporter::class, 'prometheus');
 
-        $this->app->bind('prometheus.storage_adapter_factory', function () {
-            return new StorageAdapterFactory();
-        });
+        $this->app->bind('prometheus.storage_adapter_factory', fn() => new StorageAdapterFactory());
 
-        $this->app->bind(Adapter::class, function ($app) {
+        $this->app->bind(
+            Adapter::class,
+            function ($app) {
             /** @var StorageAdapterFactory $factory */
-            $factory = $app['prometheus.storage_adapter_factory'];
-            $driver = Config::get('prometheus.storage_adapter');
-            $configs = Config::get('prometheus.storage_adapters');
-            $config = Arr::get($configs, $driver, []);
-            return $factory->make($driver, $config);
-        });
+                $factory = $app['prometheus.storage_adapter_factory'];
+                $driver  = Config::get('prometheus.storage_adapter');
+                $configs = Config::get('prometheus.storage_adapters');
+                $config  = Arr::get($configs, $driver, []);
+                return $factory->make($driver, $config);
+            }
+        );
         $this->app->alias(Adapter::class, 'prometheus.storage_adapter');
     }
 
@@ -63,6 +70,7 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
      *
      * @return array
      */
+    #[\Override]
     public function provides(): array
     {
         return [

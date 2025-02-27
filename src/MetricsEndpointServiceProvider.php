@@ -2,6 +2,7 @@
 
 namespace Mcoirault\LaravelPrometheusExporter;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class MetricsEndpointServiceProvider extends ServiceProvider
@@ -11,7 +12,7 @@ class MetricsEndpointServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (config('prometheus.metrics_route_enabled')) {
+        if (Config::get('prometheus.metrics_route_enabled')) {
             $this->loadRoutesFrom(__DIR__ . '/routes.php');
         }
     }

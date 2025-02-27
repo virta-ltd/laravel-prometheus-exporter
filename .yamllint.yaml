@@ -1,0 +1,20 @@
+---
+
+extends: default
+
+rules:
+  braces:
+    level: warning
+    max-spaces-inside: 10
+  brackets:
+    level: warning
+    max-spaces-inside: 10
+  document-start: false
+  line-length:
+    max: 200
+    allow-non-breakable-inline-mappings: true
+  truthy: disable
+
+ignore: |
+  .travis.yml
+  vendor
