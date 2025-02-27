@@ -14,11 +14,6 @@ use Prometheus\MetricFamilySamples;
 class PrometheusExporter
 {
     /**
-     * @var CollectorRegistry
-     */
-    protected CollectorRegistry $prometheus;
-
-    /**
      * @var array<string, CollectorInterface>
      */
     protected array $collectors = [];
@@ -28,10 +23,8 @@ class PrometheusExporter
      * @param CollectorRegistry $prometheus
      * @param array<CollectorInterface> $collectors
      */
-    public function __construct(protected string $namespace, CollectorRegistry $prometheus, array $collectors = [])
+    public function __construct(protected string $namespace, protected CollectorRegistry $prometheus, array $collectors = [])
     {
-        $this->prometheus = $prometheus;
-
         foreach ($collectors as $collector) {
             $this->registerCollector($collector);
         }
