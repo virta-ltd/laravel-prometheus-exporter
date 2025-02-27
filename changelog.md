@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.1 - 2025-02-27
+
+* Refactor code to be PHPStan level 10 compliant
+
 ## 2.3.0 - 2025-02-27
 
 * Add support for Laravel 12
