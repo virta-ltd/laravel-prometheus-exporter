@@ -13,3 +13,5 @@ updates:
       interval: weekly
   - package-ecosystem: composer
     directory: /
+    schedule:
+      interval: weekly
