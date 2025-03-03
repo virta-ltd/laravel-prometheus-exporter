@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Prometheus\CollectorRegistry;
+use Prometheus\RegistryInterface;
 use Prometheus\Storage\Adapter;
 use Webmozart\Assert\Assert;
 
@@ -36,9 +37,9 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
 
         foreach ($collectorClasses as $class) {
             Assert::classExists($class, "Invalid PrometheusCollector specified.");
-            Assert::implementsInterface($class, CollectorRegistry::class);
+            Assert::implementsInterface($class, CollectorInterface::class);
             $collector = $this->app->make($class);
-            Assert::implementsInterface($collector, CollectorInterface::class);
+            Assert::isInstanceOf($collector, CollectorInterface::class);
             $exporter->registerCollector($collector);
         }
     }
