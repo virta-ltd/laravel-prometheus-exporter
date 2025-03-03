@@ -1,7 +1,6 @@
 {
   "name": "mcoirault/laravel-prometheus-exporter",
   "description": "A prometheus exporter for Laravel",
-  "version": "2.3.2",
   "license": "MIT",
   "authors": [
     {
