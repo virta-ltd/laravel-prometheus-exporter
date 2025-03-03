@@ -4,7 +4,6 @@ namespace Mcoirault\LaravelPrometheusExporter;
 
 use ArrayAccess;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
@@ -40,7 +39,6 @@ class PrometheusServiceProvider extends ServiceProvider implements DeferrablePro
             Assert::implementsInterface($class, CollectorRegistry::class);
             $collector = $this->app->make($class);
             Assert::implementsInterface($collector, CollectorInterface::class);
-            Assert::isInstanceOf($collector, CollectorRegistry::class);
             $exporter->registerCollector($collector);
         }
     }
