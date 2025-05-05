@@ -25,7 +25,7 @@
     "squizlabs/php_codesniffer": "3.11.3",
     "larastan/larastan": "3.1.0",
     "driftingly/rector-laravel": "2.0.2",
-    "rector/rector": "2.0.9"
+    "rector/rector": "2.0.15"
   },
   "autoload": {
     "psr-4": {
