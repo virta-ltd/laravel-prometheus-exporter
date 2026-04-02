@@ -20,7 +20,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testConstruct(): void
     {
-        $registry = $this->createMock(CollectorRegistry::class);
+        $registry = $this->createStub(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
         $this->assertEquals('app', $exporter->getNamespace());
         $this->assertSame($registry, $exporter->getPrometheus());
@@ -42,7 +42,7 @@ class PrometheusExporterTest extends TestCase
         $collector2->expects($this->once())->method('registerMetrics')
             ->with($this->isInstanceOf(PrometheusExporter::class));
 
-        $registry = $this->createMock(CollectorRegistry::class);
+        $registry = $this->createStub(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry, [$collector1, $collector2]);
 
         $collectors = $exporter->getCollectors();
@@ -58,7 +58,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testRegisterCollector(): void
     {
-        $registry = $this->createMock(CollectorRegistry::class);
+        $registry = $this->createStub(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
 
         $this->assertEmpty($exporter->getCollectors());
@@ -82,7 +82,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testRegisterCollectorWhenCollectorIsAlreadyRegistered(): void
     {
-        $registry = $this->createMock(CollectorRegistry::class);
+        $registry = $this->createStub(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
 
         $this->assertEmpty($exporter->getCollectors());
@@ -113,7 +113,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetCollector(): void
     {
-        $registry = $this->createMock(CollectorRegistry::class);
+        $registry = $this->createStub(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
 
         $this->assertEmpty($exporter->getCollectors());
@@ -138,7 +138,7 @@ class PrometheusExporterTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The collector "test" is not registered.');
 
-        $registry = $this->createMock(CollectorRegistry::class);
+        $registry = $this->createStub(CollectorRegistry::class);
         $exporter = new PrometheusExporter('app', $registry);
 
         $exporter->getCollector('test');
@@ -150,7 +150,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testRegisterCounter(): void
     {
-        $counter = $this->createMock(Counter::class);
+        $counter = $this->createStub(Counter::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('registerCounter')
@@ -178,7 +178,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetCounter(): void
     {
-        $counter = $this->createMock(Counter::class);
+        $counter = $this->createStub(Counter::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('getCounter')
@@ -200,7 +200,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetOrRegisterCounter(): void
     {
-        $counter = $this->createMock(Counter::class);
+        $counter = $this->createStub(Counter::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('getOrRegisterCounter')
@@ -228,7 +228,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testRegisterGauge(): void
     {
-        $gauge = $this->createMock(Gauge::class);
+        $gauge = $this->createStub(Gauge::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('registerGauge')
@@ -256,7 +256,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetGauge(): void
     {
-        $gauge = $this->createMock(Gauge::class);
+        $gauge = $this->createStub(Gauge::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('getGauge')
@@ -278,7 +278,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetOrRegisterGauge(): void
     {
-        $gauge = $this->createMock(Gauge::class);
+        $gauge = $this->createStub(Gauge::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('getOrRegisterGauge')
@@ -306,7 +306,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testRegisterHistogram(): void
     {
-        $histogram = $this->createMock(Histogram::class);
+        $histogram = $this->createStub(Histogram::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('registerHistogram')
@@ -336,7 +336,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetHistogram(): void
     {
-        $histogram = $this->createMock(Histogram::class);
+        $histogram = $this->createStub(Histogram::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('getHistogram')
@@ -358,7 +358,7 @@ class PrometheusExporterTest extends TestCase
      */
     public function testGetOrRegisterHistogram(): void
     {
-        $histogram = $this->createMock(Histogram::class);
+        $histogram = $this->createStub(Histogram::class);
 
         $registry = $this->createMock(CollectorRegistry::class);
         $registry->expects($this->once())->method('getOrRegisterHistogram')

@@ -17,8 +17,8 @@ class MetricsControllerTest extends TestCase
      */
     public function testConstruct(): void
     {
-        $responseFactory = $this->createMock(ResponseFactory::class);
-        $exporter        = $this->createMock(PrometheusExporter::class);
+        $responseFactory = $this->createStub(ResponseFactory::class);
+        $exporter        = $this->createStub(PrometheusExporter::class);
         $controller      = new MetricsController($responseFactory, $exporter);
         $this->assertSame($responseFactory, $controller->getResponseFactory());
         $this->assertSame($exporter, $controller->getPrometheusExporter());
@@ -29,7 +29,7 @@ class MetricsControllerTest extends TestCase
      */
     public function testGetMetrics(): void
     {
-        $response = $this->createMock(Response::class);
+        $response = $this->createStub(Response::class);
 
         $responseFactory = $this->createMock(ResponseFactory::class);
         $responseFactory->expects($this->once())
