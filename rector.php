@@ -11,14 +11,12 @@ return RectorConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
-    // uncomment to reach your current PHP version
-    // ->withPhpSets()
+    ->withPhpSets()
     ->withTypeCoverageLevel(0)
     ->withDeadCodeLevel(0)
     ->withCodeQualityLevel(0)
-    ->withPhpSets()
     ->withSets([
-        LaravelSetList::LARAVEL_110,
+        LaravelSetList::LARAVEL_130,
         LaravelSetList::LARAVEL_CODE_QUALITY,
     ])
     ;
