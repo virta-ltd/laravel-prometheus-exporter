@@ -21,7 +21,7 @@
   "require-dev": {
     "ext-apcu": "*",
     "ext-redis": "*",
-    "orchestra/testbench": "11.0.0",
+    "orchestra/testbench": "11.1.0",
     "phpunit/phpunit": "12.5.15",
     "squizlabs/php_codesniffer": "4.0.1",
     "larastan/larastan": "3.9.3",
