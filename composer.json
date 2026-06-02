@@ -25,7 +25,7 @@
     "phpunit/phpunit": "12.5.15",
     "squizlabs/php_codesniffer": "4.0.1",
     "larastan/larastan": "3.9.3",
-    "driftingly/rector-laravel": "2.2.0",
+    "driftingly/rector-laravel": "2.5.0",
     "rector/rector": "2.3.9"
   },
   "autoload": {
